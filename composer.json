@@ -11,7 +11,8 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.4",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "guzzlehttp/guzzle": "^7.3"
     },
     "require-dev": {
         "orchestra/testbench": "^6.19"
@@ -25,5 +26,5 @@
         "psr-4": {
             "Bryceandy\\Selcom\\Tests\\": "tests/"
         }
-    },
+    }
 }
