@@ -13,6 +13,9 @@
         "php": ">=7.4",
         "ext-curl": "*"
     },
+    "require-dev": {
+        "orchestra/testbench": "^6.19"
+    },
     "autoload": {
         "psr-4": {
             "Bryceandy\\Selcom\\": "src/"
@@ -22,5 +25,5 @@
         "psr-4": {
             "Bryceandy\\Selcom\\Tests\\": "tests/"
         }
-    }
+    },
 }
