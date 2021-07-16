@@ -1,0 +1,13 @@
+{
+    "name": "bryceandy/laravel-selcom",
+    "description": "Laravel package that integrates with Selcom APIs (Utility Payments, Wallet Cashin, Agent Cashout, C2B, Qwiksend, VCN, Checkout & International Money Transfer",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "bryceandy",
+            "email": "hello@bryceandy.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
