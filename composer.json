@@ -9,5 +9,18 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "php": ">=7.4",
+        "ext-curl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bryceandy\\Selcom\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bryceandy\\Selcom\\Tests\\": "tests/"
+        }
+    }
 }
