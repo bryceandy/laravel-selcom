@@ -14,4 +14,14 @@ class SelcomBaseServiceProvider extends ServiceProvider
             ], 'selcom-config');
         }
     }
+
+    public function register()
+    {
+        $this->registerFacades();
+    }
+
+    private function registerFacades()
+    {
+        $this->app->singleton('Selcom', fn($app) => new Selcom);
+    }
 }
