@@ -27,5 +27,12 @@
         "psr-4": {
             "Bryceandy\\Selcom\\Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bryceandy\\Selcom\\SelcomBaseServiceProvider"
+            ]
+        }
     }
 }
