@@ -34,11 +34,11 @@ return [
    | Selcom live status
    |--------------------------------------------------------------------------
    |
-   | A value that determines if you are using Selcom in test mode or live.
-   | When testing, the above values would be different in every stage.
+   | This determines if you are using Selcom in live mode.
+   | The credentials would be different in every stage.
    |
-   | For example; the SELCOM_API_SECRET in test mode is different from
-   | SELCOM_API_SECRET in live mode. The same applies to all others.
+   | SELCOM_API_KEY and SELCOM_API_SECRET should be
+   | different when changing between live & test.
    */
     'live' => env('SELCOM_IS_LIVE', false),
 ];
