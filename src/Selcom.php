@@ -2,6 +2,7 @@
 
 namespace Bryceandy\Selcom;
 
+use Bryceandy\Selcom\Exceptions\ConfigurationUnavailableException;
 use Bryceandy\Selcom\Traits\HandlesCheckout;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -18,8 +19,17 @@ class Selcom
 
     private string $apiUrl;
 
+    /**
+     * @throws ConfigurationUnavailableException
+     */
     public function __construct()
     {
+        if (! config('selcom.vendor') || ! config('selcom.key') || ! config('selcom.secret')) {
+            throw new ConfigurationUnavailableException(
+                'Your Selcom credentials can not be empty!'
+            );
+        }
+
         $this->vendor = config('selcom.vendor');
 
         $this->apiKey = config('selcom.key');
