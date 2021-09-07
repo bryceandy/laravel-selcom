@@ -36,9 +36,9 @@ php artisan vendor:publish --tag=selcom-config
 After obtaining the three credentials from Selcom support, add their values in the `.env` variables
 
 ```dotenv
-SELCOM_VENDOR=123456
+SELCOM_VENDOR_ID=123456
 SELCOM_API_KEY=yourApiKey
-SELCOMM_SECRET=yourSecretKey
+SELCOM_API_SECRET=yourSecretKey
 
 SELCOM_IS_LIVE=false
 ```
