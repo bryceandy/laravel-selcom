@@ -41,6 +41,11 @@ class Selcom
         $this->apiUrl = "https://$subdomain.selcommobile.com/v1/";
     }
 
+    public function prefix(): string
+    {
+        return config('selcom.prefix');
+    }
+
     private function makeRequest(string $uri, string $method, array $data = []): Response
     {
         $fullPath = $this->apiUrl . $uri;

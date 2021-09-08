@@ -41,4 +41,13 @@ return [
    | different when changing between live & test.
    */
     'live' => env('SELCOM_IS_LIVE', false),
+
+    /*
+   |--------------------------------------------------------------------------
+   | Selcom prefix
+   |--------------------------------------------------------------------------
+   |
+   | This prefix will be used for routes and on Selcom order IDs.
+   */
+    'prefix' => env('SELCOM_PREFIX', 'selcom'),
 ];
