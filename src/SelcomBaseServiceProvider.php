@@ -2,6 +2,8 @@
 
 namespace Bryceandy\Selcom;
 
+use Bryceandy\Selcom\Facades\Selcom;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class SelcomBaseServiceProvider extends ServiceProvider
@@ -18,10 +20,22 @@ class SelcomBaseServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerFacades();
+
+        $this->registerRoutes();
     }
 
     private function registerFacades()
     {
         $this->app->singleton('Selcom', fn($app) => new Selcom);
+    }
+
+    private function registerRoutes()
+    {
+        $prefix = Selcom::prefix();
+
+        Route::group(
+            compact('prefix'),
+            fn() => $this->loadRoutesFrom(__DIR__ . '/../routes/web.php')
+        );
     }
 }
