@@ -15,6 +15,10 @@ class SelcomBaseServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/selcom.php' => config_path('selcom.php')
             ], 'selcom-config');
         }
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/selcom.php', 'selcom'
+        );
     }
 
     public function register()
