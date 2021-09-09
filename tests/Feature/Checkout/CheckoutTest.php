@@ -63,4 +63,11 @@ class CheckoutTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
+
+    public function test_ussd_checkout_sends_back_data_without_redirecting()
+    {
+        $response = Selcom::checkout(array_merge($this->requiredData, ['is_ussd' => true]));
+
+        $this->assertEquals($response, $this->walletPaymentResponseData);
+    }
 }
