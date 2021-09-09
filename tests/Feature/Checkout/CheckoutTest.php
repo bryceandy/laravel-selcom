@@ -57,7 +57,10 @@ class CheckoutTest extends TestCase
     {
         $this->expectException(MissingDataException::class);
 
-        Selcom::checkout(Arr::except($this->requiredData, 'name'));
+        Selcom::checkout(Arr::except(
+            $this->requiredData,
+            Arr::random(array_keys($this->requiredData))
+        ));
 
         $response = Selcom::checkout($this->requiredData);
 
