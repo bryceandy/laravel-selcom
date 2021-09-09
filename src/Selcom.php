@@ -56,7 +56,7 @@ class Selcom
         $fullPath = $this->apiUrl . $uri;
 
         return Http::withHeaders($this->getHeaders($data))
-            ->${strtolower($method)}($fullPath, $data);
+            ->{strtolower($method)}($fullPath, $data);
     }
 
     private function getHeaders($data): array
