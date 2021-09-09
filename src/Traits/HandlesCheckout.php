@@ -24,7 +24,7 @@ trait HandlesCheckout
             'amount' => (int) $data['amount'],
             'currency' => $data['currency'] ?? 'TZS',
             'webhook' => base64_encode(route('selcom.checkout-callback')),
-            'no_of_items' => (int) $data['items'] ?? 1,
+            'no_of_items' => (int) ($data['items'] ?? 1),
         ]);
 
         return $this->handleCheckoutOrderResponse($orderRequest, $data, $orderId);
