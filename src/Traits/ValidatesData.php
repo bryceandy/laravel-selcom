@@ -24,7 +24,7 @@ trait ValidatesData
 
         if ($missing->count()) {
             throw new MissingDataException(
-                "The following key is missing from your data: {$missing->first()}"
+                "The following keys are missing from your data: {$missing->implode(', ')}"
             );
         }
     }
