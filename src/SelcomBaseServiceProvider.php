@@ -26,7 +26,7 @@ class SelcomBaseServiceProvider extends ServiceProvider
 
     private function registerFacades()
     {
-        $this->app->singleton('Selcom', fn($app) => new Selcom);
+        $this->app->singleton('Selcom', fn($app) => new \Bryceandy\Selcom\Selcom);
     }
 
     private function registerRoutes()
