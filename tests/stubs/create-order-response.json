@@ -1,0 +1,7 @@
+{
+  "reference" : "0289999288",
+  "resultcode" : "000",
+  "result" : "SUCCESS",
+  "message" : "Order creation successful",
+  "data": [{"gateway_buyer_uuid":"12344321", "payment_token":"80008000", "qr":"QR", "payment_gateway_url":"aHR0cDpleGFtcGxlLmNvbS9wZy90MTIyMjI="}]
+}

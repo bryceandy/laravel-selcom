@@ -16,7 +16,8 @@
         "guzzlehttp/guzzle": "^7.3"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.19"
+        "orchestra/testbench": "^6.19",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
