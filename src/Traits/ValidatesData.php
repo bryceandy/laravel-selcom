@@ -9,7 +9,7 @@ trait ValidatesData
     public function validateCheckoutData($data)
     {
         $this->validate(
-            ['email', 'name', 'phone', 'amount', 'is_ussd', 'transaction_id'],
+            ['email', 'name', 'phone', 'amount', 'transaction_id'],
             $data
         );
     }
