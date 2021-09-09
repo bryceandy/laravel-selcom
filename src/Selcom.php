@@ -2,14 +2,16 @@
 
 namespace Bryceandy\Selcom;
 
-use Bryceandy\Selcom\Exceptions\ConfigurationUnavailableException;
+use Bryceandy\Selcom\Exceptions\MissingDataException;
 use Bryceandy\Selcom\Traits\HandlesCheckout;
+use Bryceandy\Selcom\Traits\ValidatesData;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class Selcom
 {
     use HandlesCheckout;
+    use ValidatesData;
 
     private $vendor;
 
@@ -38,12 +40,12 @@ class Selcom
     }
 
     /**
-     * @throws ConfigurationUnavailableException
+     * @throws MissingDataException
      */
     private function validateConfig()
     {
         if (! config('selcom.vendor') || ! config('selcom.key') || ! config('selcom.secret')) {
-            throw new ConfigurationUnavailableException(
+            throw new MissingDataException(
                 'Your Selcom credentials can not be empty!'
             );
         }
