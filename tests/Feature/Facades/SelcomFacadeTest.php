@@ -20,10 +20,10 @@ class SelcomFacadeTest extends TestCase
     }
 
     /** @test */
-    public function test_facade_requires_configuration()
+    public function test_facade_requires_configuration_to_make_requests()
     {
         $this->expectException(ConfigurationUnavailableException::class);
 
-        Selcom::getHeaders([]);
+        Selcom::makeRequest('', 'GET');
     }
 }
