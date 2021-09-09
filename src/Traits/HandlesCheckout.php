@@ -11,7 +11,7 @@ trait HandlesCheckout
     {
         $this->validateCheckoutData($data);
 
-        $orderId = (string) Str::of($this->prefix())->snake('-')->upper()
+        $orderId = (string) Str::of($this->prefix())->snake('')->upper()
             . now()->timestamp
             . rand(1, 9999);
 
