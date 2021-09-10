@@ -110,6 +110,12 @@ If you feel lazy, this package already ships with these pages for you. And if yo
 php artisan vendor:publish --tag=selcom-views
 ```
 
+ - Also, you can assign a prefix for the package. This will be applied to the routes and order IDs
+
+```dotenv
+SELCOM_PREFIX=SHOP
+```
+
 #### Customizing the payment page theme
 
 The configuration contains a `colors` field which specifies the theme of your payment page.
