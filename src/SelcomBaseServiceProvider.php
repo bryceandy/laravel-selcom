@@ -12,13 +12,19 @@ class SelcomBaseServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/selcom.php' => config_path('selcom.php')
+                __DIR__ . '/../config/selcom.php' => config_path('selcom.php'),
             ], 'selcom-config');
+
+            $this->publishes([
+                __DIR__ . '/../resources/views' => resource_path('views/vendor/selcom'),
+            ], 'selcom-views');
         }
 
         $this->mergeConfigFrom(
             __DIR__ . '/../config/selcom.php', 'selcom'
         );
+
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'selcom');
     }
 
     public function register()
