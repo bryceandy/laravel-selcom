@@ -57,6 +57,7 @@ return [
    |--------------------------------------------------------------------------
    |
    | The URL where your users will be taken to after a payment is complete.
+   | Eg: https://www.myshop.co.tz/checkout/redirect
    */
     'redirect_url' => env('SELCOM_REDIRECT_URL'),
 
@@ -66,6 +67,7 @@ return [
    |--------------------------------------------------------------------------
    |
    | The URL where your users will be taken to when they cancel the payment.
+   | Eg: https://www.myshop.co.tz/checkout/cancel
    */
     'cancel_url' => env('SELCOM_CANCEL_URL'),
 
