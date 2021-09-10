@@ -39,6 +39,26 @@ class Selcom
         return config('selcom.prefix');
     }
 
+    public function redirectUrl()
+    {
+        return config('selcom.redirect_url') ?? route('selcom.redirect');
+    }
+
+    public function cancelUrl()
+    {
+        return config('selcom.cancel_url') ?? route('selcom.cancel');
+    }
+
+    public function gatewayColors()
+    {
+        return config('selcom.colors');
+    }
+
+    public function gatewayPaymentExpiry()
+    {
+        return config('selcom.expiry');
+    }
+
     /**
      * @throws MissingDataException
      */
