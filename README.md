@@ -116,6 +116,10 @@ php artisan vendor:publish --tag=selcom-views
 SELCOM_PREFIX=SHOP
 ```
 
+### Checkout to the payments page (with cards)
+
+To use the cards on the payment page,
+
 #### Customizing the payment page theme
 
 The configuration contains a `colors` field which specifies the theme of your payment page.
@@ -127,7 +131,3 @@ SELCOM_HEADER_COLOR="#FG345O"
 SELCOM_LINK_COLOR="#000000"
 SELCOM_BUTTON_COLOR="#E244FF"
 ```
-
-### Checkout to the payments page (with cards)
-
-To use the cards on the payment page, 
