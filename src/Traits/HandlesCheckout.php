@@ -11,9 +11,7 @@ trait HandlesCheckout
     {
         $this->validateCheckoutData($data);
 
-        $orderId = (string) Str::of($this->prefix())->snake('')->upper()
-            . now()->timestamp
-            . rand(1, 9999);
+        $orderId = $this->generateOrderId();
 
         $orderRequest = $this->makeRequest(
             'checkout/create-order-minimal',
@@ -27,6 +25,13 @@ trait HandlesCheckout
     public function checkoutCard()
     {
         //
+    }
+
+    private function generateOrderId(): string
+    {
+        return (string) Str::of($this->prefix())->snake('')->upper()
+            . now()->timestamp
+            . rand(1, 9999);
     }
 
     private function getMinimalOrderData(array $data, string $orderId): array
