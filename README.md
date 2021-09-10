@@ -17,9 +17,9 @@ Pre-installation requirements
 * Minimum PHP version is 7.4
 * Your server must have the cURL PHP extension (ext-curl) installed
 
-Then proceed to install
+Then proceed to install:
 
-```bash
+```
 composer require bryceandy/laravel-selcom
 ```
 
@@ -27,13 +27,7 @@ composer require bryceandy/laravel-selcom
 
 To access Selcom's APIs, you will need to provide the package with access to your Selcom vendorID, API Key and Secret Key.
 
-For this we need to publish the package's configuration file using:
-
-```bash
-php artisan vendor:publish --tag=selcom-config
-```
-
-After obtaining the three credentials from Selcom support, add their values in the `.env` variables
+After obtaining the three credentials from Selcom support, add their values in the `.env` variables:
 
 ```dotenv
 SELCOM_VENDOR_ID=123456
@@ -43,7 +37,89 @@ SELCOM_API_SECRET=yourSecretKey
 SELCOM_IS_LIVE=false
 ```
 
-Note that when starting you will be provided with test credentials and this is why `SELCOM_IS_LIVE` is initially false.
+Note that when starting you will be provided with test credentials.
 
-When you change to live credentials don't forget to change `SELCOM_IS_LIVE` to true.
+When you change to live credentials don't forget to change `SELCOM_IS_LIVE` to `true`.
 
+We are going to update more configuration settings as we move along, but feel free to publish the config to fully customize it.
+
+```
+php artisan vendor:publish --tag=selcom-config
+```
+
+## Checkout API
+
+Checkout is the simplest Selcom API we can start processing payments with.
+
+### Checkout payments using USSD
+
+This API automatically interacts with your user's USSD directly after being called.
+
+**Note**: As of now, direct USSD is only applicable to AitelMoney and TigoPesa customers.
+
+```php
+use Bryceandy\Selcom\Facades\Selcom;
+
+Selcom::checkout([
+    'name' => "Buyer's name", 
+    'email' => "Buyer's email",
+    'phone' => "Buyer's msisdn, for example 255756334000",
+    'amount' => "Amount to be paid",
+    'transaction_id' => "Unique transaction id",
+    'is_ussd' => true,
+]);
+```
+
+Other networks may use USSD only manually with tokens as shown with other checkout options below.
+
+### Checkout to the payments page (without cards)
+
+The payment page contains payment options such as QR code, all mobile money options etc.
+
+To redirect to this page, we will use the previous example but return without the `is_ussd` option:
+
+```php
+Selcom::checkout([
+    'name' => "Buyer's name", 
+    'email' => "Buyer's email",
+    'phone' => "Buyer's msisdn, for example 255756334000",
+    'amount' => "Amount to be paid",
+    'transaction_id' => "Unique transaction id",
+]);
+```
+
+Optionally, you may specify using the `.env` file the following:
+
+ - The page where your users will be redirected once they complete a payment:
+
+```dotenv
+SELCOM_REDIRECT_URL=https://mysite.com/selcom/redirect
+```
+
+ - The page where your users will be taken when they cancel the payment process:
+
+```dotenv
+SELCOM_CANCEL_URL=https://mysite.com/selcom/cancel
+```
+
+If you feel lazy, this package already ships with these pages for you. And if you want to customize them, run:
+
+```
+php artisan vendor:publish --tag=selcom-views
+```
+
+#### Customizing the payment page theme
+
+The configuration contains a `colors` field which specifies the theme of your payment page.
+
+To customize the colors, add the color values in the `.env` file:
+
+```dotenv
+SELCOM_HEADER_COLOR="#FG345O"
+SELCOM_LINK_COLOR="#000000"
+SELCOM_BUTTON_COLOR="#E244FF"
+```
+
+### Checkout to the payments page (with cards)
+
+To use the cards on the payment page, 
