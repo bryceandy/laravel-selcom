@@ -15,7 +15,23 @@ trait HandlesCheckout
             . now()->timestamp
             . rand(1, 9999);
 
-        $orderRequest = $this->makeRequest('checkout/create-order-minimal', 'POST', [
+        $orderRequest = $this->makeRequest(
+            'checkout/create-order-minimal',
+            'POST',
+            $this->getMinimalOrderData($data, $orderId)
+        );
+
+        return $this->handleCheckoutOrderResponse($orderRequest, $data, $orderId);
+    }
+
+    public function checkoutCard()
+    {
+        //
+    }
+
+    private function getMinimalOrderData(array $data, string $orderId): array
+    {
+        return [
             'vendor' => $this->vendor,
             'order_id' => $orderId,
             'buyer_email' => $data['email'],
@@ -31,14 +47,7 @@ trait HandlesCheckout
             'header_colour' => $this->paymentGatewayColors()['header'],
             'link_colour' => $this->paymentGatewayColors()['link'],
             'button_colour' => $this->paymentGatewayColors()['button'],
-        ]);
-
-        return $this->handleCheckoutOrderResponse($orderRequest, $data, $orderId);
-    }
-
-    public function checkoutCard()
-    {
-        //
+        ];
     }
 
     private function handleCheckoutOrderResponse(Response $response, array $data, string $orderId)
