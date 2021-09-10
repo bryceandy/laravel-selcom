@@ -67,6 +67,10 @@ Selcom::checkout([
     'amount' => "Amount to be paid",
     'transaction_id' => "Unique transaction id",
     'is_ussd' => true,
+    // Optional fields
+    'currency' => 'Default is TZS',
+    'items' => 'Number of items purchased, default is 1',
+    'payment_phone' => 'The number that will make the USSD transactions, if not specified it will use the phone value',
 ]);
 ```
 
@@ -76,7 +80,7 @@ Other networks may use USSD only manually with tokens as shown with other checko
 
 The payment page contains payment options such as QR code, all mobile money options etc.
 
-To redirect to this page, we will use the previous example but return without the `is_ussd` option:
+To redirect to this page, we will use the previous example but return without the `is_ussd` option or assign it to `false`:
 
 ```php
 use Bryceandy\Selcom\Facades\Selcom;
