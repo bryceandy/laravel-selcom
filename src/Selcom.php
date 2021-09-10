@@ -49,12 +49,12 @@ class Selcom
         return config('selcom.cancel_url') ?? route('selcom.cancel');
     }
 
-    public function gatewayColors()
+    public function paymentGatewayColors()
     {
         return config('selcom.colors');
     }
 
-    public function gatewayPaymentExpiry()
+    public function paymentExpiry()
     {
         return config('selcom.expiry');
     }

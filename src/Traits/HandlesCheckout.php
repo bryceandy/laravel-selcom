@@ -23,8 +23,14 @@ trait HandlesCheckout
             'buyer_phone' => $data['phone'],
             'amount' => (int) $data['amount'],
             'currency' => $data['currency'] ?? 'TZS',
+            'redirect_url' => base64_encode($this->redirectUrl()),
+            'cancel_url' => base64_encode($this->cancelUrl()),
             'webhook' => base64_encode(route('selcom.checkout-callback')),
             'no_of_items' => (int) ($data['items'] ?? 1),
+            'expiry' => $this->paymentExpiry(),
+            'header_colour' => $this->paymentGatewayColors()['header'],
+            'link_colour' => $this->paymentGatewayColors()['link'],
+            'button_colour' => $this->paymentGatewayColors()['button'],
         ]);
 
         return $this->handleCheckoutOrderResponse($orderRequest, $data, $orderId);
