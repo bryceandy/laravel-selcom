@@ -64,7 +64,7 @@ class Selcom
      */
     private function validateConfig()
     {
-        if (! config('selcom.vendor') || ! config('selcom.key') || ! config('selcom.secret')) {
+        if (! $this->vendor || ! $this->apiKey || ! $this->apiSecret) {
             throw new MissingDataException(
                 'Your Selcom credentials can not be empty!'
             );
