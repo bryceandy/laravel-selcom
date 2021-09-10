@@ -15,9 +15,13 @@ class TestCase extends \Orchestra\Testbench\TestCase
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set([
-            'selcom.vendor' => '12345',
-            'selcom.key' => 'abc',
-            'selcom.secret' => 'abc',
+            'selcom.vendor' => '12345ABC',
+            'selcom.key' => 'ABCDE',
+            'selcom.secret' => 'ABCDE',
+            'selcom.colors.header' => '#FF0012',
+            'selcom.colors.link' => '#FF0012',
+            'selcom.colors.button' => '#FF0012',
+            'selcom.expiry' => 60,
         ]);
     }
 
