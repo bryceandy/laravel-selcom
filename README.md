@@ -79,7 +79,9 @@ The payment page contains payment options such as QR code, all mobile money opti
 To redirect to this page, we will use the previous example but return without the `is_ussd` option:
 
 ```php
-Selcom::checkout([
+use Bryceandy\Selcom\Facades\Selcom;
+
+return Selcom::checkout([
     'name' => "Buyer's name", 
     'email' => "Buyer's email",
     'phone' => "Buyer's msisdn, for example 255756334000",
