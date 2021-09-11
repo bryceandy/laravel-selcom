@@ -53,9 +53,9 @@ Checkout is the simplest Selcom API we can start processing payments with.
 
 ### Checkout payments using USSD
 
-This API automatically interacts with your user's USSD directly after being called.
+This API automatically pulls your user's USSD payment menu directly after being called.
 
-**Note**: As of now, direct USSD is only applicable to AitelMoney and TigoPesa customers.
+**Note**: As of now, this is only applicable to AitelMoney and TigoPesa customers.
 
 ```php
 use Bryceandy\Selcom\Facades\Selcom;
@@ -78,7 +78,7 @@ Other networks may use USSD only manually with tokens as shown with other checko
 
 ### Checkout to the payments page (without cards)
 
-The payment page contains payment options such as QR code, all mobile money options etc.
+The payment page contains payment options such as QR code, Masterpass, all mobile money options etc.
 
 To redirect to this page, we will use the previous example but return without the `is_ussd` option or assign it to `false`:
 
@@ -123,6 +123,10 @@ SELCOM_PREFIX=SHOP
 ### Checkout to the payments page (with cards)
 
 To use the cards on the payment page,
+
+### Checkout with cards (without navigating to the payment page)
+
+To use the cards,
 
 #### Customizing the payment page theme
 
