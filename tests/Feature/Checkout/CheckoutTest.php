@@ -2,14 +2,19 @@
 
 namespace Bryceandy\Selcom\Tests\Feature\Checkout;
 
-use Bryceandy\Selcom\Exceptions\MissingDataException;
-use Bryceandy\Selcom\Facades\Selcom;
-use Bryceandy\Selcom\Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use Bryceandy\Selcom\{
+    Exceptions\InvalidDataException,
+    Exceptions\MissingDataException,
+    Facades\Selcom,
+    Tests\TestCase,
+};
+use Illuminate\{
+    Foundation\Testing\WithFaker,
+    Http\RedirectResponse,
+    Support\Arr,
+    Support\Facades\Http,
+    Support\Str,
+};
 
 class CheckoutTest extends TestCase
 {
@@ -65,6 +70,20 @@ class CheckoutTest extends TestCase
         $response = Selcom::checkout($this->requiredData);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /** @test */
+    public function test_sending_incomplete_names_throws_an_exception()
+    {
+        $this->expectException(InvalidDataException::class);
+
+        $this->expectExceptionMessage('Name must contain at-least 2 words');
+
+        $data = $this->requiredData;
+
+        $data['name'] = 'Bryce';
+
+        Selcom::checkout($data);
     }
 
     public function test_ussd_checkout_sends_back_data_without_redirecting()
