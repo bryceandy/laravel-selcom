@@ -53,8 +53,8 @@ trait ValidatesData
             );
         }
 
-        if (isset($keys['name']) &&
-            count(explode(' ', $submittedData['name'])) < 1)
+        if (isset($submittedData['name']) &&
+            count(explode(' ', $submittedData['name'])) < 2)
         {
             throw new InvalidDataException('Name must contain at-least 2 words');
         }
