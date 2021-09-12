@@ -101,7 +101,7 @@ trait HandlesCheckout
     {
         $this->checkForResponseFailure($response);
 
-        return $data['is_ussd'] ?? false
+        return $data['no_redirection'] ?? false
             ? $this->makeRequest('checkout/wallet-payment', 'POST', [
                 'transid' => $data['transaction_id'],
                 'order_id' => $orderId,
@@ -116,7 +116,7 @@ trait HandlesCheckout
         $this->checkForResponseFailure($response);
 
         return $data['no_redirection'] ?? false
-            ? collect([])
+            ? // TODO
             : $this->redirectToPaymentPage($response);
     }
 }
