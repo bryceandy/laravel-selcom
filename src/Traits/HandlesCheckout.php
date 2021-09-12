@@ -2,6 +2,7 @@
 
 namespace Bryceandy\Selcom\Traits;
 
+use Bryceandy\Selcom\Exceptions\InvalidDataException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Str;
 
@@ -85,16 +86,23 @@ trait HandlesCheckout
         ];
     }
 
-    private function handleOrderResponse(Response $response, array $data, string $orderId, $cardPayment = false)
+    private function checkRequestFailure(Response $response)
     {
         if ($response->failed()) {
             return $response->json();
         }
+    }
+
+    private function handleOrderResponse(Response $response, array $data, string $orderId, $cardPayment = false)
+    {
+        $this->checkRequestFailure($response);
 
         // TODO: Store data in the payments table
 
         return $data['no_redirection'] ?? false
-            ? $cardPayment ? $this->makeCardPayment($data, $orderId) : $this->makeWalletPullPayment($data, $orderId)
+            ? $cardPayment
+                ? $this->makeCardPayment($data, $orderId)
+                : $this->makeWalletPullPayment($data, $orderId)
             : redirect(base64_decode($response['data'][0]['payment_gateway_url']));
     }
 
@@ -108,8 +116,55 @@ trait HandlesCheckout
             ->json();
     }
 
+    /**
+     * @throws InvalidDataException
+     */
     private function makeCardPayment(array $data, string $orderId)
     {
-        //
+        $fetchCards = $this->makeRequest(
+            "checkout/stored-cards?gateway_buyer_uuid={$data['buyer_uuid']}&buyer_userid={$data['user_id']}",
+            'GET',
+            [
+                'buyer_userid' => $data['user_id'],
+                'gateway_buyer_uuid' => $data['buyer_uuid'],
+            ]
+        );
+
+        $this->checkRequestFailure($fetchCards);
+
+        if (! count($fetchCards['data'])) {
+            throw new InvalidDataException(
+                "User doesn't have stored cards! Create a card with the VCN API or remove no_redirection."
+            );
+        }
+
+        return rescue(
+            fn() => $this->cardPayment($fetchCards['data'][0]['card_token'], $data, $orderId),
+            function () use ($fetchCards, $data, $orderId) {
+                if (count($fetchCards['data']) > 1) {
+                    return rescue(
+                        fn() => $this->cardPayment($fetchCards['data'][1]['card_token'], $data, $orderId),
+                        fn() => count($fetchCards['data']) > 2
+                            ? $this->cardPayment($fetchCards['data'][2]['card_token'], $data, $orderId)
+                            : null
+                    );
+                }
+
+                return null;
+            }
+        );
+    }
+
+    private function cardPayment(string $cardToken, array $data, string $orderId)
+    {
+        return $this->makeRequest('checkout/card-payment', 'POST', [
+            'transid' => $data['transaction_id'],
+            'vendor' => $this->vendor,
+            'order_id' => $orderId,
+            'card_token' => $cardToken,
+            'buyer_userid' => $data['user_id'],
+            'gateway_buyer_uuid' => $data['buyer_uuid'],
+        ])
+            ->json();
     }
 }
