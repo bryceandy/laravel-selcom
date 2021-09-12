@@ -115,8 +115,8 @@ trait HandlesCheckout
     {
         $this->checkForResponseFailure($response);
 
-        return $data['is_redirected'] ?? false
-            ? $this->redirectToPaymentPage($response)
-            : collect([]);
+        return $data['no_redirection'] ?? false
+            ? collect([])
+            : $this->redirectToPaymentPage($response);
     }
 }
