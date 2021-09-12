@@ -34,8 +34,8 @@ trait HandlesCheckout
             array_merge(
                 $this->getMinimalOrderData($data, $orderId),
                 $this->getCardCheckoutExtraData($data),
-                (! blank($data['user_id']) ? ['buyer_userid' => $data['user_id']] : []),
-                (! blank($data['buyer_uuid']) ? ['gateway_buyer_uuid' => $data['buyer_uuid']] : [])
+                (($data['user_id'] ?? false) ? ['buyer_userid' => $data['user_id']] : []),
+                (($data['buyer_uuid'] ?? false) ? ['gateway_buyer_uuid' => $data['buyer_uuid']] : [])
             )
         );
 
