@@ -2,6 +2,7 @@
 
 namespace Bryceandy\Selcom\Traits;
 
+use Illuminate\Support\Arr;
 use Bryceandy\Selcom\Exceptions\{
     InvalidDataException,
     MissingDataException,
@@ -9,20 +10,29 @@ use Bryceandy\Selcom\Exceptions\{
 
 trait ValidatesData
 {
+    /**
+     * @throws InvalidDataException
+     * @throws MissingDataException
+     */
     public function validateCheckoutData($data)
     {
         $this->validate($this->getMinimalOrderKeys(), $data);
     }
 
+    /**
+     * @throws InvalidDataException
+     * @throws MissingDataException
+     */
     public function validateCardCheckoutData($data)
     {
+        if (($data['no_redirection'] ?? false) && ! Arr::has($data, ['user_id', 'buyer_uuid'])) {
+            throw new InvalidDataException(
+                'You are missing the following: user_id & buyer_uuid. Otherwise, set no_redirection to false'
+            );
+        }
+
         $this->validate(
-            array_merge($this->getMinimalOrderKeys(), [
-                'address',
-                'postcode',
-                'buyer_uuid',
-                'user_id',
-            ]),
+            array_merge($this->getMinimalOrderKeys(), ['address', 'postcode']),
             $data
         );
     }
