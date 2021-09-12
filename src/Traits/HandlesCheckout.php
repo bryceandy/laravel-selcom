@@ -19,7 +19,7 @@ trait HandlesCheckout
             $this->getMinimalOrderData($data, $orderId)
         );
 
-        return $this->handleCheckoutOrderResponse($orderRequest, $data, $orderId);
+        return $this->handleOrderResponse($orderRequest, $data, $orderId);
     }
 
     public function cardCheckout(array $data)
@@ -39,7 +39,7 @@ trait HandlesCheckout
             )
         );
 
-        return $this->handleCardCheckoutOrderResponse($orderRequest, $data, $orderId);
+        return $this->handleOrderResponse($orderRequest, $data, $orderId, true);
     }
 
     private function generateOrderId(): string
@@ -70,18 +70,6 @@ trait HandlesCheckout
         ];
     }
 
-    private function checkForResponseFailure($response)
-    {
-        if ($response->failed()) {
-            return $response->json();
-        }
-    }
-
-    private function redirectToPaymentPage($response)
-    {
-        return redirect(base64_decode($response['data'][0]['payment_gateway_url']));
-    }
-
     private function getCardCheckoutExtraData(array $data): array
     {
         return [
@@ -97,26 +85,31 @@ trait HandlesCheckout
         ];
     }
 
-    private function handleCheckoutOrderResponse(Response $response, array $data, string $orderId)
+    private function handleOrderResponse(Response $response, array $data, string $orderId, $cardPayment = false)
     {
-        $this->checkForResponseFailure($response);
+        if ($response->failed()) {
+            return $response->json();
+        }
+
+        // TODO: Store data in the payments table
 
         return $data['no_redirection'] ?? false
-            ? $this->makeRequest('checkout/wallet-payment', 'POST', [
-                'transid' => $data['transaction_id'],
-                'order_id' => $orderId,
-                'msisdn' => $data['payment_phone'] ?? $data['phone'],
-            ])
-                ->json()
-            : $this->redirectToPaymentPage($response);
+            ? $cardPayment ? $this->makeCardPayment($data, $orderId) : $this->makeWalletPullPayment($data, $orderId)
+            : redirect(base64_decode($response['data'][0]['payment_gateway_url']));
     }
 
-    private function handleCardCheckoutOrderResponse(Response $response, array $data, string $orderId)
+    private function makeWalletPullPayment(array $data, string $orderId)
     {
-        $this->checkForResponseFailure($response);
+        return $this->makeRequest('checkout/wallet-payment', 'POST', [
+            'transid' => $data['transaction_id'],
+            'order_id' => $orderId,
+            'msisdn' => $data['payment_phone'] ?? $data['phone'],
+        ])
+            ->json();
+    }
 
-        return $data['no_redirection'] ?? false
-            ? // TODO
-            : $this->redirectToPaymentPage($response);
+    private function makeCardPayment(array $data, string $orderId)
+    {
+        //
     }
 }
