@@ -22,9 +22,24 @@ trait HandlesCheckout
         return $this->handleCheckoutOrderResponse($orderRequest, $data, $orderId);
     }
 
-    public function checkoutCard()
+    public function cardCheckout(array $data)
     {
-        //
+        $this->validateCardCheckoutData($data);
+
+        $orderId = $this->generateOrderId();
+
+        $orderRequest = $this->makeRequest(
+            'checkout/create-order',
+            'POST',
+            array_merge(
+                $this->getMinimalOrderData($data, $orderId),
+                $this->getCardCheckoutExtraData($data),
+                (! blank($data['user_id']) ? ['buyer_userid' => $data['user_id']] : []),
+                (! blank($data['buyer_uuid']) ? ['gateway_buyer_uuid' => $data['buyer_uuid']] : [])
+            )
+        );
+
+        return $this->handleCardCheckoutOrderResponse($orderRequest, $data, $orderId);
     }
 
     private function generateOrderId(): string
@@ -55,11 +70,36 @@ trait HandlesCheckout
         ];
     }
 
-    private function handleCheckoutOrderResponse(Response $response, array $data, string $orderId)
+    private function checkForResponseFailure($response)
     {
         if ($response->failed()) {
             return $response->json();
         }
+    }
+
+    private function redirectToPaymentPage($response)
+    {
+        return redirect(base64_decode($response['data'][0]['payment_gateway_url']));
+    }
+
+    private function getCardCheckoutExtraData(array $data): array
+    {
+        return [
+            'payment_methods' => 'ALL',
+            'billing.firstname' => explode(' ', $data['name'])[0],
+            'billing.lastname' => explode(' ', $data['name'])[1],
+            'billing.address_1' => $data['address'],
+            'billing.city' => $data['city'] ?? 'Dar Es Salaam',
+            'billing.state_or_region' => $data['state'] ?? 'Dar Es Salaam',
+            'billing.postcode_or_pobox' => $data['postcode'],
+            'billing.country' => $data['country_code'] ?? 'TZ',
+            'billing.phone' => $data['billing_phone'] ?? $data['phone'],
+        ];
+    }
+
+    private function handleCheckoutOrderResponse(Response $response, array $data, string $orderId)
+    {
+        $this->checkForResponseFailure($response);
 
         return $data['is_ussd'] ?? false
             ? $this->makeRequest('checkout/wallet-payment', 'POST', [
@@ -68,6 +108,15 @@ trait HandlesCheckout
                 'msisdn' => $data['payment_phone'] ?? $data['phone'],
             ])
                 ->json()
-            : redirect(base64_decode($response['data'][0]['payment_gateway_url']));
+            : $this->redirectToPaymentPage($response);
+    }
+
+    private function handleCardCheckoutOrderResponse(Response $response, array $data, string $orderId)
+    {
+        $this->checkForResponseFailure($response);
+
+        return $data['is_redirected'] ?? false
+            ? $this->redirectToPaymentPage($response)
+            : collect([]);
     }
 }
