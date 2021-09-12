@@ -13,7 +13,6 @@ use Illuminate\{
     Http\RedirectResponse,
     Support\Arr,
     Support\Facades\Http,
-    Support\Str,
 };
 
 class CheckoutTest extends TestCase
@@ -33,9 +32,7 @@ class CheckoutTest extends TestCase
             'email' => $this->faker->email(),
             'phone' => $this->faker->phoneNumber(),
             'amount' => $this->faker->randomNumber(5),
-            'transaction_id' => (string) Str::of($this->faker->buildingNumber())
-                ->snake('')
-                ->upper(),
+            'transaction_id' => strtoupper($this->faker->bothify('##???#??#???')),
         ];
 
         $createOrderResponse = Http::response(json_decode(
