@@ -92,7 +92,7 @@ class CheckoutTest extends TestCase
     }
 
     /** @test */
-    public function test_sending_incomplete_names_throws_an_exception()
+    public function test_sending_incomplete_checkout_name_throws_an_exception()
     {
         $this->expectException(InvalidDataException::class);
 
@@ -103,6 +103,20 @@ class CheckoutTest extends TestCase
         $data['name'] = 'Bryce';
 
         Selcom::checkout($data);
+    }
+
+    /** @test */
+    public function test_sending_incomplete_card_checkout_name_throws_an_exception()
+    {
+        $this->expectException(InvalidDataException::class);
+
+        $this->expectExceptionMessage('Name must contain at-least 2 words');
+
+        $data = $this->cardCheckoutData;
+
+        $data['name'] = 'Bryce';
+
+        Selcom::cardCheckout($data);
     }
 
     public function test_ussd_checkout_sends_back_data_without_redirecting()
