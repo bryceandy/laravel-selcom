@@ -1,0 +1,22 @@
+{
+  "reference" : "0289999288",
+  "resultcode" : "000",
+  "result" : "SUCCESS",
+  "message" : "Order fetch successful",
+  "data": [
+    {
+      "masked_card":"5555-12XX-XXXX-1234",
+      "creation_date":"2019-06-06 22:00:00",
+      "card_token":"ABC123423232",
+      "name":"JOE JOHN",
+      "card_type":"001"
+    },
+    {
+      "masked_card":"5555-12XX-XXXX-4321",
+      "creation_date":"2019-06-06 23:00:00",
+      "card_token":"ABC123423244",
+      "name":"JOE JOHN",
+      "card_type":"001"
+    }
+  ]
+}

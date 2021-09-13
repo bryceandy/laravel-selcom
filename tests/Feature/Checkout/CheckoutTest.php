@@ -25,6 +25,10 @@ class CheckoutTest extends TestCase
 
     private array $walletPaymentResponseData;
 
+    private array $storedCardsResponseData;
+
+    private array $cardPaymentResponseData;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,12 +56,24 @@ class CheckoutTest extends TestCase
             true
         );
 
+        $this->storedCardsResponseData = json_decode(
+            file_get_contents(__DIR__ . '/../../stubs/stored-cards-response.json'),
+            true
+        );
+
+        $this->cardPaymentResponseData = json_decode(
+            file_get_contents(__DIR__ . '/../../stubs/card-payment-response.json'),
+            true
+        );
+
         $urlPrefix = 'https://apigwtest.selcommobile.com/v1/';
 
         Http::fake([
             "${urlPrefix}checkout/create-order-minimal" => $createOrderResponse,
             "${urlPrefix}checkout/create-order" => $createOrderResponse,
             "${urlPrefix}checkout/wallet-payment" => Http::response($this->walletPaymentResponseData),
+            "${urlPrefix}checkout/stored-cards*" => Http::response($this->storedCardsResponseData),
+            "${urlPrefix}checkout/card-payment" => Http::response($this->cardPaymentResponseData),
         ]);
     }
 
@@ -144,5 +160,17 @@ class CheckoutTest extends TestCase
         $data['no_redirection'] = true;
 
         Selcom::cardCheckout($data);
+    }
+
+    /** @test */
+    public function test_automatic_card_payment_sends_data_without_redirecting()
+    {
+        $response = Selcom::cardCheckout(array_merge($this->cardCheckoutData, [
+            'no_redirection' => true,
+            'user_id' => $this->faker->randomNumber(),
+            'buyer_uuid' => $this->faker->uuid(),
+        ]));
+
+        $this->assertEquals($response, $this->cardPaymentResponseData);
     }
 }
