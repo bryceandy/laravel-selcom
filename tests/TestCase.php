@@ -22,6 +22,11 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'selcom.colors.link' => '#FF0012',
             'selcom.colors.button' => '#FF0012',
             'selcom.expiry' => 60,
+            'database.default' => 'testdb',
+            'database.connections.testdb' => [
+                'driver' => 'sqlite',
+                'database' => ':memory:',
+            ],
         ]);
     }
 

@@ -9,15 +9,16 @@ use Bryceandy\Selcom\{
     Tests\TestCase,
 };
 use Illuminate\{
+    Foundation\Testing\RefreshDatabase,
     Foundation\Testing\WithFaker,
     Http\RedirectResponse,
     Support\Arr,
-    Support\Facades\Http,
-};
+    Support\Facades\Http};
 
 class CheckoutTest extends TestCase
 {
     use WithFaker;
+    use RefreshDatabase;
 
     private array $requiredCheckoutData;
 

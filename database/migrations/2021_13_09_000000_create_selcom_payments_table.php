@@ -19,7 +19,7 @@ class CreateSelcomPaymentsTable extends Migration
             $table->string('user_id')->nullable();
             $table->string('gateway_buyer_uuid')->nullable();
             $table->string('transid');
-            $table->string('payment_status');
+            $table->string('payment_status')->nullable();
             $table->integer('amount');
             $table->string('reference')->nullable();
             $table->string('msisdn')->nullable();

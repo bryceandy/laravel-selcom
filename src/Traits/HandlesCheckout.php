@@ -102,6 +102,7 @@ trait HandlesCheckout
 
         DB::table('selcom_payments')->insert(array_merge(
             [
+                'amount' => (int) $data['amount'],
                 'order_id' => $orderId,
                 'transid' => $data['transaction_id'],
                 'created_at' => now(),
