@@ -67,14 +67,14 @@ class CheckoutTest extends TestCase
             true
         );
 
-        $urlPrefix = 'https://apigwtest.selcommobile.com/v1/';
+        $urlPrefix = 'selcommobile.com/v1/checkout/';
 
         Http::fake([
-            "${urlPrefix}checkout/create-order-minimal" => $createOrderResponse,
-            "${urlPrefix}checkout/create-order" => $createOrderResponse,
-            "${urlPrefix}checkout/wallet-payment" => Http::response($this->walletPaymentResponseData),
-            "${urlPrefix}checkout/stored-cards*" => Http::response($this->storedCardsResponseData),
-            "${urlPrefix}checkout/card-payment" => Http::response($this->cardPaymentResponseData),
+            "${urlPrefix}create-order-minimal" => $createOrderResponse,
+            "${urlPrefix}create-order" => $createOrderResponse,
+            "${urlPrefix}wallet-payment" => Http::response($this->walletPaymentResponseData),
+            "${urlPrefix}stored-cards*" => Http::response($this->storedCardsResponseData),
+            "${urlPrefix}card-payment" => Http::response($this->cardPaymentResponseData),
         ]);
     }
 
