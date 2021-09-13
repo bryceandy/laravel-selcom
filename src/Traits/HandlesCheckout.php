@@ -121,14 +121,10 @@ trait HandlesCheckout
      */
     private function makeCardPayment(array $data, string $orderId)
     {
-        $fetchCards = $this->makeRequest(
-            "checkout/stored-cards?gateway_buyer_uuid={$data['buyer_uuid']}&buyer_userid={$data['user_id']}",
-            'GET',
-            [
-                'buyer_userid' => $data['user_id'],
-                'gateway_buyer_uuid' => $data['buyer_uuid'],
-            ]
-        );
+        $fetchCards = $this->makeRequest('checkout/stored-cards', 'GET', [
+            'buyer_userid' => $data['user_id'],
+            'gateway_buyer_uuid' => $data['buyer_uuid'],
+        ]);
 
         $this->checkRequestFailure($fetchCards);
 
