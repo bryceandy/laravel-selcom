@@ -119,6 +119,7 @@ class CheckoutTest extends TestCase
         Selcom::cardCheckout($data);
     }
 
+    /** @test */
     public function test_ussd_checkout_sends_back_data_without_redirecting()
     {
         $response = Selcom::checkout(array_merge(
