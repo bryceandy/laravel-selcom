@@ -4,6 +4,7 @@ namespace Bryceandy\Selcom\Traits;
 
 use Bryceandy\Selcom\Exceptions\InvalidDataException;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 trait HandlesCheckout
@@ -97,7 +98,17 @@ trait HandlesCheckout
     {
         $this->checkRequestFailure($response);
 
-        // TODO: Store data in the payments table
+        $gatewayBuyerUuid = $data['buyer_uuid'] ?? $response['data'][0]['gateway_buyer_uuid'] ?? null;
+
+        DB::table('selcom_payments')->insert(array_merge(
+            [
+                'order_id' => $orderId,
+                'transid' => $data['transaction_id'],
+                'created_at' => now(),
+            ],
+            (($gatewayBuyerUuid ?? false) ? ['gateway_buyer_uuid' => $gatewayBuyerUuid] : []),
+            (($data['user_id'] ?? false) ? ['user_id' => $data['user_id']] : []),
+        ));
 
         return $data['no_redirection'] ?? false
             ? $cardPayment
