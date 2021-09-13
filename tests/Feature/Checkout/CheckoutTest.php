@@ -129,4 +129,16 @@ class CheckoutTest extends TestCase
 
         $this->assertEquals($response, $this->walletPaymentResponseData);
     }
+
+    /** @test */
+    public function test_automatic_card_checkout_requires_user_data()
+    {
+        $this->expectException(InvalidDataException::class);
+
+        $data = $this->cardCheckoutData;
+
+        $data['no_redirection'] = true;
+
+        Selcom::cardCheckout($data);
+    }
 }
