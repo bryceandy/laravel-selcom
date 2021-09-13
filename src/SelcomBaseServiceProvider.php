@@ -24,7 +24,7 @@ class SelcomBaseServiceProvider extends ServiceProvider
             __DIR__ . '/../config/selcom.php', 'selcom'
         );
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'selcom');
+        $this->loadAssets();
     }
 
     public function register()
@@ -32,6 +32,13 @@ class SelcomBaseServiceProvider extends ServiceProvider
         $this->registerFacades();
 
         $this->registerRoutes();
+    }
+
+    private function loadAssets()
+    {
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'selcom');
+
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 
     private function registerFacades()
