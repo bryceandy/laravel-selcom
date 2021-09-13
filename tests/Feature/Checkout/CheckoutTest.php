@@ -19,7 +19,9 @@ class CheckoutTest extends TestCase
 {
     use WithFaker;
 
-    private array $requiredData;
+    private array $requiredCheckoutData;
+
+    private array $cardCheckoutData;
 
     private array $walletPaymentResponseData;
 
@@ -27,13 +29,18 @@ class CheckoutTest extends TestCase
     {
         parent::setUp();
 
-        $this->requiredData = [
+        $this->requiredCheckoutData = [
             'name' => $this->faker->name(),
             'email' => $this->faker->email(),
             'phone' => $this->faker->phoneNumber(),
             'amount' => $this->faker->randomNumber(5),
             'transaction_id' => strtoupper($this->faker->bothify('##???#??#???')),
         ];
+
+        $this->cardCheckoutData = array_merge($this->requiredCheckoutData, [
+            'address' => $this->faker->address(),
+            'postcode' => $this->faker->postcode(),
+        ]);
 
         $createOrderResponse = Http::response(json_decode(
             file_get_contents(__DIR__ . '/../../stubs/create-order-response.json'),
@@ -60,11 +67,26 @@ class CheckoutTest extends TestCase
         $this->expectException(MissingDataException::class);
 
         Selcom::checkout(Arr::except(
-            $this->requiredData,
-            Arr::random(array_keys($this->requiredData))
+            $this->requiredCheckoutData,
+            Arr::random(array_keys($this->requiredCheckoutData))
         ));
 
-        $response = Selcom::checkout($this->requiredData);
+        $response = Selcom::checkout($this->requiredCheckoutData);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    /** @test */
+    public function test_sending_incomplete_card_checkout_data_throws_an_exception()
+    {
+        $this->expectException(MissingDataException::class);
+
+        Selcom::cardCheckout(Arr::except(
+            $this->cardCheckoutData,
+            Arr::random(array_keys($this->cardCheckoutData))
+        ));
+
+        $response = Selcom::cardCheckout($this->cardCheckoutData);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
@@ -76,7 +98,7 @@ class CheckoutTest extends TestCase
 
         $this->expectExceptionMessage('Name must contain at-least 2 words');
 
-        $data = $this->requiredData;
+        $data = $this->requiredCheckoutData;
 
         $data['name'] = 'Bryce';
 
@@ -85,7 +107,10 @@ class CheckoutTest extends TestCase
 
     public function test_ussd_checkout_sends_back_data_without_redirecting()
     {
-        $response = Selcom::checkout(array_merge($this->requiredData, ['no_redirection' => true]));
+        $response = Selcom::checkout(array_merge(
+            $this->requiredCheckoutData,
+            ['no_redirection' => true]
+        ));
 
         $this->assertEquals($response, $this->walletPaymentResponseData);
     }
