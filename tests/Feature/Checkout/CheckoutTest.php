@@ -135,6 +135,10 @@ class CheckoutTest extends TestCase
     {
         $this->expectException(InvalidDataException::class);
 
+        $this->expectExceptionMessage(
+            'You are missing the following: user_id & buyer_uuid. Otherwise, set no_redirection to false'
+        );
+
         $data = $this->cardCheckoutData;
 
         $data['no_redirection'] = true;
