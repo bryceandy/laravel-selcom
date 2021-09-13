@@ -13,7 +13,9 @@ use Illuminate\{
     Foundation\Testing\WithFaker,
     Http\RedirectResponse,
     Support\Arr,
-    Support\Facades\Http};
+    Support\Facades\Http,
+};
+use Mockery;
 
 class CheckoutTest extends TestCase
 {
@@ -76,6 +78,13 @@ class CheckoutTest extends TestCase
             "${urlPrefix}stored-cards*" => Http::response($this->storedCardsResponseData),
             "${urlPrefix}card-payment" => Http::response($this->cardPaymentResponseData),
         ]);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        Mockery::close();
     }
 
     /** @test */
@@ -173,5 +182,23 @@ class CheckoutTest extends TestCase
         ]));
 
         $this->assertEquals($response, $this->cardPaymentResponseData);
+    }
+
+    /** @test */
+    public function test_automatic_card_payment_without_created_cards_throws_an_exception()
+    {
+        $this->storedCardsResponseData = ['data' => []];
+
+        $this->expectException(InvalidDataException::class);
+
+        $this->expectExceptionMessage(
+            "User doesn't have stored cards! Create a card with the VCN API or remove no_redirection."
+        );
+
+        Selcom::cardCheckout(array_merge($this->cardCheckoutData, [
+            'no_redirection' => true,
+            'user_id' => $this->faker->randomNumber(),
+            'buyer_uuid' => $this->faker->uuid(),
+        ]));
     }
 }
