@@ -191,4 +191,13 @@ trait HandlesCheckout
         ])
             ->json();
     }
+
+    public function deleteCard($cardId, $buyerUuid)
+    {
+        return $this->makeRequest('checkout/delete-card', 'DELETE', [
+            'id' => $cardId,
+            'gateway_buyer_uuid' => $buyerUuid,
+        ])
+            ->json();
+    }
 }

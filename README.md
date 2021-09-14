@@ -227,6 +227,13 @@ Selcom::fetchCards($userId, $gatewayBuyerUuid);
 
 ### Deleting a user's stored card
 
+To delete a user's stored card you need a `buyer_uuid` and card ID obtained from `fetchCards` request above.
+
+```php
+use Bryceandy\Selcom\Facades\Selcom;
+
+Selcom::deleteCard($cardId, $gatewayBuyerUuid);
+```
 
 ### Checkout webhook/callback
 
