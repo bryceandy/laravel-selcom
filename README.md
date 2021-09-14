@@ -196,6 +196,8 @@ Selcom::cardCheckout([
 ]);
 ```
 
+This method will fetch 3 saved cards of the user and try all of them until a payment is successful or all fail.
+
 #### Obtaining the buyer's UUID
 
 If this user has visited the payment page before to make a payment, then their uuid is already in the database.
@@ -210,3 +212,8 @@ $buyerUuid = DB::table('selcom_payments')
     ])
     ->value('gateway_buyer_uuid');
 ```
+
+### Listing a user's stored cards
+
+
+### Deleting a user's stored card
