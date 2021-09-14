@@ -208,4 +208,27 @@ class CheckoutTest extends TestCase
             'buyer_uuid' => $this->faker->uuid(),
         ]));
     }
+
+    /** @test */
+    public function test_order_details_are_saved_before_payments()
+    {
+        Http::fake([
+            "selcommobile.com/v1/checkout/stored-cards*" => Http::response($this->storedCardsResponseData),
+        ]);
+
+        $data = array_merge($this->cardCheckoutData, [
+            'no_redirection' => true,
+            'user_id' => $this->faker->randomNumber(),
+            'buyer_uuid' => $this->faker->uuid(),
+        ]);
+
+        $response = Selcom::cardCheckout($data);
+
+        $this->assertDatabaseHas('selcom_payments', [
+            'user_id' => $data['user_id'],
+            'gateway_buyer_uuid' => $data['buyer_uuid'],
+        ]);
+
+        $this->assertEquals($response, $this->cardPaymentResponseData);
+    }
 }
