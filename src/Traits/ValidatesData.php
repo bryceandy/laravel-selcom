@@ -25,9 +25,9 @@ trait ValidatesData
      */
     public function validateCardCheckoutData($data)
     {
-        if (($data['no_redirection'] ?? false) && ! Arr::has($data, ['user_id', 'buyer_uuid'])) {
+        if (($data['no_redirection'] ?? false) && ! Arr::has($data, ['user_id'])) {
             throw new InvalidDataException(
-                'You are missing the following: user_id & buyer_uuid. Otherwise, set no_redirection to false'
+                'You are missing the following: user_id. Otherwise, set no_redirection to false'
             );
         }
 

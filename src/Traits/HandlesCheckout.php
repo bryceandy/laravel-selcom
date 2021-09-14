@@ -94,6 +94,9 @@ trait HandlesCheckout
         }
     }
 
+    /**
+     * @throws InvalidDataException
+     */
     private function handleOrderResponse(Response $response, array $data, string $orderId, $cardPayment = false)
     {
         $this->checkRequestFailure($response);
@@ -113,7 +116,7 @@ trait HandlesCheckout
 
         return $data['no_redirection'] ?? false
             ? $cardPayment
-                ? $this->makeCardPayment($data, $orderId)
+                ? $this->makeCardPayment($data, $orderId, $gatewayBuyerUuid)
                 : $this->makeWalletPullPayment($data, $orderId)
             : redirect(base64_decode($response['data'][0]['payment_gateway_url']));
     }
@@ -131,29 +134,33 @@ trait HandlesCheckout
     /**
      * @throws InvalidDataException
      */
-    private function makeCardPayment(array $data, string $orderId)
+    private function makeCardPayment(array $data, string $orderId, $gatewayBuyerUuid)
     {
+        if (is_null($gatewayBuyerUuid)) {
+            throw new InvalidDataException(
+                'Provide the Buyer UUID for this user before making the request!'
+            );
+        }
+
         $fetchCards = $this->makeRequest('checkout/stored-cards', 'GET', [
             'buyer_userid' => $data['user_id'],
-            'gateway_buyer_uuid' => $data['buyer_uuid'],
+            'gateway_buyer_uuid' => $gatewayBuyerUuid,
         ]);
 
         $this->checkRequestFailure($fetchCards);
 
         if (! count($fetchCards['data'])) {
-            throw new InvalidDataException(
-                "User doesn't have stored cards! Create a card with the VCN API or remove no_redirection."
-            );
+            throw new InvalidDataException("User doesn't have stored cards!");
         }
 
         return rescue(
-            fn() => $this->cardPayment($fetchCards['data'][0]['card_token'], $data, $orderId),
-            function () use ($fetchCards, $data, $orderId) {
+            fn() => $this->cardPayment($fetchCards['data'][0]['card_token'], $data, $orderId, $gatewayBuyerUuid),
+            function () use ($fetchCards, $data, $orderId, $gatewayBuyerUuid) {
                 if (count($fetchCards['data']) > 1) {
                     return rescue(
-                        fn() => $this->cardPayment($fetchCards['data'][1]['card_token'], $data, $orderId),
+                        fn() => $this->cardPayment($fetchCards['data'][1]['card_token'], $data, $orderId, $gatewayBuyerUuid),
                         fn() => count($fetchCards['data']) > 2
-                            ? $this->cardPayment($fetchCards['data'][2]['card_token'], $data, $orderId)
+                            ? $this->cardPayment($fetchCards['data'][2]['card_token'], $data, $orderId, $gatewayBuyerUuid)
                             : null
                     );
                 }
@@ -163,7 +170,7 @@ trait HandlesCheckout
         );
     }
 
-    private function cardPayment(string $cardToken, array $data, string $orderId)
+    private function cardPayment(string $cardToken, array $data, string $orderId, $uuid)
     {
         return $this->makeRequest('checkout/card-payment', 'POST', [
             'transid' => $data['transaction_id'],
@@ -171,7 +178,7 @@ trait HandlesCheckout
             'order_id' => $orderId,
             'card_token' => $cardToken,
             'buyer_userid' => $data['user_id'],
-            'gateway_buyer_uuid' => $data['buyer_uuid'],
+            'gateway_buyer_uuid' => $uuid,
         ])
             ->json();
     }

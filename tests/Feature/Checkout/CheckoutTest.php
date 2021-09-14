@@ -161,7 +161,7 @@ class CheckoutTest extends TestCase
         $this->expectException(InvalidDataException::class);
 
         $this->expectExceptionMessage(
-            'You are missing the following: user_id & buyer_uuid. Otherwise, set no_redirection to false'
+            'You are missing the following: user_id. Otherwise, set no_redirection to false'
         );
 
         $data = $this->cardCheckoutData;
@@ -178,11 +178,15 @@ class CheckoutTest extends TestCase
             "selcommobile.com/v1/checkout/stored-cards*" => Http::response($this->storedCardsResponseData),
         ]);
 
-        $response = Selcom::cardCheckout(array_merge($this->cardCheckoutData, [
-            'no_redirection' => true,
-            'user_id' => $this->faker->randomNumber(),
-            'buyer_uuid' => $this->faker->uuid(),
-        ]));
+        $response = Selcom::cardCheckout(array_merge(
+            $this->cardCheckoutData,
+            [
+                'no_redirection' => true,
+                'user_id' => $this->faker->randomNumber(),
+            ],
+            // Randomly include uuid
+            (Arr::random([0, 1]) ? ['buyer_uuid' => $this->faker->uuid()] : [])
+        ));
 
         $this->assertEquals($response, $this->cardPaymentResponseData);
     }
@@ -196,9 +200,7 @@ class CheckoutTest extends TestCase
 
         $this->expectException(InvalidDataException::class);
 
-        $this->expectExceptionMessage(
-            "User doesn't have stored cards! Create a card with the VCN API or remove no_redirection."
-        );
+        $this->expectExceptionMessage("User doesn't have stored cards!");
 
         Selcom::cardCheckout(array_merge($this->cardCheckoutData, [
             'no_redirection' => true,
