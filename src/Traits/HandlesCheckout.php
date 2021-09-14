@@ -110,7 +110,7 @@ trait HandlesCheckout
                 'transid' => $data['transaction_id'],
                 'created_at' => now(),
             ],
-            (($gatewayBuyerUuid ?? false) ? ['gateway_buyer_uuid' => $gatewayBuyerUuid] : []),
+            ($gatewayBuyerUuid ? ['gateway_buyer_uuid' => $gatewayBuyerUuid] : []),
             (($data['user_id'] ?? false) ? ['user_id' => $data['user_id']] : []),
         ));
 
