@@ -182,4 +182,13 @@ trait HandlesCheckout
         ])
             ->json();
     }
+
+    public function fetchCards($userId, $buyerUuid)
+    {
+        return $this->makeRequest('checkout/stored-cards', 'GET', [
+            'buyer_userid' => $userId,
+            'gateway_buyer_uuid' => $buyerUuid,
+        ])
+            ->json();
+    }
 }

@@ -215,6 +215,15 @@ $buyerUuid = DB::table('selcom_payments')
 
 ### Listing a user's stored cards
 
+To fetch the user's stored cards could be useful to know if a user has cards, or if there is a need to delete.
+
+You will require a user's ID and `buyer_uuid`:
+
+```php
+use Bryceandy\Selcom\Facades\Selcom;
+
+Selcom::fetchCards($userId, $gatewayBuyerUuid);
+```
 
 ### Deleting a user's stored card
 

@@ -248,4 +248,16 @@ class CheckoutTest extends TestCase
 
         $this->assertEquals($response, $this->walletPaymentResponseData);
     }
+
+    /** @test */
+    public function test_stored_cards_can_be_fetched()
+    {
+        Http::fake([
+            "selcommobile.com/v1/checkout/stored-cards*" => Http::response($this->storedCardsResponseData),
+        ]);
+
+        $response= Selcom::fetchCards($this->faker->randomNumber(), $this->faker->uuid());
+
+        $this->assertEquals($response, $this->storedCardsResponseData);
+    }
 }
