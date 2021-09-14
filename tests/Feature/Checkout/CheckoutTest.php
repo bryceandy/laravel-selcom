@@ -75,7 +75,6 @@ class CheckoutTest extends TestCase
             "${urlPrefix}create-order-minimal" => $createOrderResponse,
             "${urlPrefix}create-order" => $createOrderResponse,
             "${urlPrefix}wallet-payment" => Http::response($this->walletPaymentResponseData),
-            "${urlPrefix}stored-cards*" => Http::response($this->storedCardsResponseData),
             "${urlPrefix}card-payment" => Http::response($this->cardPaymentResponseData),
         ]);
     }
@@ -175,6 +174,10 @@ class CheckoutTest extends TestCase
     /** @test */
     public function test_automatic_card_payment_sends_data_without_redirecting()
     {
+        Http::fake([
+            "selcommobile.com/v1/checkout/stored-cards*" => Http::response($this->storedCardsResponseData),
+        ]);
+
         $response = Selcom::cardCheckout(array_merge($this->cardCheckoutData, [
             'no_redirection' => true,
             'user_id' => $this->faker->randomNumber(),
@@ -187,7 +190,9 @@ class CheckoutTest extends TestCase
     /** @test */
     public function test_automatic_card_payment_without_created_cards_throws_an_exception()
     {
-        $this->storedCardsResponseData = ['data' => []];
+        Http::fake([
+            "selcommobile.com/v1/checkout/stored-cards*" => Http::response(['data' => []]),
+        ]);
 
         $this->expectException(InvalidDataException::class);
 
