@@ -210,7 +210,7 @@ class CheckoutTest extends TestCase
     }
 
     /** @test */
-    public function test_order_details_are_saved_before_payments()
+    public function test_order_details_are_saved_before_card_payments()
     {
         Http::fake([
             "selcommobile.com/v1/checkout/stored-cards*" => Http::response($this->storedCardsResponseData),
@@ -227,8 +227,25 @@ class CheckoutTest extends TestCase
         $this->assertDatabaseHas('selcom_payments', [
             'user_id' => $data['user_id'],
             'gateway_buyer_uuid' => $data['buyer_uuid'],
+            'transid' => $data['transaction_id'],
+            'amount' => $data['amount'],
         ]);
 
         $this->assertEquals($response, $this->cardPaymentResponseData);
+    }
+
+    /** @test */
+    public function test_order_details_are_saved_before_checkout_payments()
+    {
+        $data = array_merge($this->requiredCheckoutData, ['no_redirection' => true]);
+
+        $response = Selcom::checkout($data);
+
+        $this->assertDatabaseHas('selcom_payments', [
+            'transid' => $data['transaction_id'],
+            'amount' => $data['amount'],
+        ]);
+
+        $this->assertEquals($response, $this->walletPaymentResponseData);
     }
 }
