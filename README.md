@@ -270,7 +270,7 @@ class ProcessWebhook
     /**
      * Handle the event.
      *
-     * @param  CheckoutWebhookReceived $event
+     * @param CheckoutWebhookReceived $event
      */
     public function handle(CheckoutWebhookReceived $event)
     {
@@ -278,7 +278,9 @@ class ProcessWebhook
         $orderId = $event->orderId;
         
         // Fetch updated record in the database, and do what you need with it
-        $status = DB::table('selcom_payments')->where('order_id', $orderId)->value('payment_status');
+        $status = DB::table('selcom_payments')
+            ->where('order_id', $orderId)
+            ->value('payment_status');
         
         if ($status === 'PENDING') {
             Selcom::orderStatus($orderId); //...
