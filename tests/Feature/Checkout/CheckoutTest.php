@@ -289,6 +289,8 @@ class CheckoutTest extends TestCase
         $this->assertDatabaseHas('selcom_payments', [
             'transid' => $data['transaction_id'],
             'payment_status' => 'COMPLETED',
+            'order_id' => $orderId,
+            'reference' => '289124234',
         ]);
     }
 }
