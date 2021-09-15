@@ -239,7 +239,7 @@ Selcom::deleteCard($cardId, $gatewayBuyerUuid);
 
 The package comes with an implementation of the payment webhook. 
 
-When Selcom sends the payment status to your site, the data in the `selcom_payments` table will be updated an event `Bryceandy\Selcom\Events\CheckoutWebhookReceived` will be dispatched.
+When Selcom sends the payment status to your site, the data in the `selcom_payments` table will be updated and an event `Bryceandy\Selcom\Events\CheckoutWebhookReceived` will be dispatched.
 
 You can create a listener for the event:
 
