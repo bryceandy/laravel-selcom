@@ -82,6 +82,8 @@ class CheckoutTest extends TestCase
             "${urlPrefix}create-order" => $createOrderResponse,
             "${urlPrefix}wallet-payment" => Http::response($this->walletPaymentResponseData),
             "${urlPrefix}card-payment" => Http::response($this->cardPaymentResponseData),
+            "${urlPrefix}delete-card" => Http::response($this->okResponseData),
+            "${urlPrefix}order-status*" => Http::response($this->okResponseData),
         ]);
     }
 
@@ -270,10 +272,6 @@ class CheckoutTest extends TestCase
     /** @test */
     public function test_cards_can_be_deleted()
     {
-        Http::fake([
-            "selcommobile.com/v1/checkout/delete-card" => Http::response($this->okResponseData),
-        ]);
-
         $response = Selcom::deleteCard($this->faker->randomNumber(), $this->faker->uuid());
 
         $this->assertEquals($response, $this->okResponseData);
@@ -344,10 +342,6 @@ class CheckoutTest extends TestCase
     /** @test */
     public function test_order_statuses_can_be_queried()
     {
-        Http::fake([
-            "selcommobile.com/v1/checkout/order-status*" => Http::response($this->okResponseData),
-        ]);
-
         $response = Selcom::orderStatus($this->faker->uuid());
 
         $this->assertEquals($response, $this->okResponseData);
