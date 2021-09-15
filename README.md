@@ -237,6 +237,55 @@ Selcom::deleteCard($cardId, $gatewayBuyerUuid);
 
 ### Checkout webhook/callback
 
+The package comes with an implementation of the payment webhook. 
+
+When Selcom sends the payment status to your site, the data in the `selcom_payments` table will be updated an event `Bryceandy\Selcom\Events\CheckoutWebhookReceived` will be dispatched.
+
+You can create a listener for the event:
+
+```php
+class EventServiceProvider extends ServiceProvider
+{
+    protected $listen = [
+        \Bryceandy\Selcom\Events\CheckoutWebhookReceived::class => [
+            \App\Listeners\ProcessWebhook::class,
+        ],
+    ];
+}
+```
+
+Then in your listener `App\Listeners\ProcessWebhook`, you can do anything with the order ID:
+
+```php
+<?php
+
+namespace App\Listeners;
+
+use Bryceandy\Selcom\Events\CheckoutWebhookReceived;
+use Bryceandy\Selcom\Facades\Selcom;
+use Illuminate\Support\Facades\DB;
+
+class ProcessWebhook
+{
+    /**
+     * Handle the event.
+     *
+     * @param  CheckoutWebhookReceived $event
+     */
+    public function handle(CheckoutWebhookReceived $event)
+    {
+        // Get the order id
+        $orderId = $event->orderId;
+        
+        // Fetch updated record in the database, and do what you need with it
+        $status = DB::table('selcom_payments')->where('order_id', $orderId)->value('payment_status');
+        
+        if ($status === 'PENDING') {
+            Selcom::orderStatus($orderId); //...
+        }
+    }
+}
+```
 
 ### Check order status
 
