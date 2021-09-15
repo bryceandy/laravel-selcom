@@ -31,6 +31,8 @@ class CheckoutTest extends TestCase
 
     private array $cardPaymentResponseData;
 
+    private array $okResponseData;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -65,6 +67,11 @@ class CheckoutTest extends TestCase
 
         $this->cardPaymentResponseData = json_decode(
             file_get_contents(__DIR__ . '/../../stubs/card-payment-response.json'),
+            true
+        );
+
+        $this->okResponseData = json_decode(
+            file_get_contents(__DIR__ . '/../../stubs/ok-response-data.json'),
             true
         );
 
@@ -258,6 +265,18 @@ class CheckoutTest extends TestCase
         $response= Selcom::fetchCards($this->faker->randomNumber(), $this->faker->uuid());
 
         $this->assertEquals($response, $this->storedCardsResponseData);
+    }
+
+    /** @test */
+    public function test_cards_can_be_deleted()
+    {
+        Http::fake([
+            "selcommobile.com/v1/checkout/delete-card" => Http::response($this->okResponseData),
+        ]);
+
+        $response = Selcom::deleteCard($this->faker->randomNumber(), $this->faker->uuid());
+
+        $this->assertEquals($response, $this->okResponseData);
     }
 
     /** @test */
