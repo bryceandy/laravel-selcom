@@ -291,5 +291,23 @@ class ProcessWebhook
 
 ### Check order status
 
+To query order statuses to Selcom, simply run:
+
+```php
+use Bryceandy\Selcom\Facades\Selcom;
+
+Selcom::orderStatus($orderId);
+```
 
 ### List orders
+
+To list all orders made to Selcom, simply indicate `from_date` and `to_date`:
+
+```php
+use Bryceandy\Selcom\Facades\Selcom;
+
+$fromDate = '2021-02-16';
+$toDate = '2021-12-25';
+
+Selcom::listOrders($fromDate, $toDate);
+```
