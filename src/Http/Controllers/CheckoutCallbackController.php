@@ -10,8 +10,8 @@ class CheckoutCallbackController extends Controller
 {
     public function __invoke()
     {
-        CheckoutWebhookReceived::dispatch(request('order_id'));
+        Selcom::processCheckoutWebhook();
 
-        return Selcom::processCheckoutWebhook();
+        CheckoutWebhookReceived::dispatch(request('order_id'));
     }
 }
