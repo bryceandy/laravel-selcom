@@ -8,12 +8,14 @@ use Bryceandy\Selcom\{
     Facades\Selcom,
     Tests\TestCase,
 };
-use Illuminate\{Foundation\Testing\RefreshDatabase,
+use Illuminate\{
+    Foundation\Testing\RefreshDatabase,
     Foundation\Testing\WithFaker,
     Http\RedirectResponse,
     Support\Arr,
     Support\Facades\DB,
-    Support\Facades\Http};
+    Support\Facades\Http,
+};
 use Mockery;
 
 class CheckoutTest extends TestCase
