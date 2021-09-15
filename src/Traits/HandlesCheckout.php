@@ -220,4 +220,14 @@ trait HandlesCheckout
         ])
             ->json();
     }
+
+    public function listOrders(string $fromDate, string $toDate)
+    {
+        return $this->makeRequest(
+            'checkout/list-orders',
+            'GET',
+            compact('fromDate', 'toDate')
+        )
+            ->json();
+    }
 }

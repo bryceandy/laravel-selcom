@@ -84,6 +84,7 @@ class CheckoutTest extends TestCase
             "${urlPrefix}card-payment" => Http::response($this->cardPaymentResponseData),
             "${urlPrefix}delete-card" => Http::response($this->okResponseData),
             "${urlPrefix}order-status*" => Http::response($this->okResponseData),
+            "${urlPrefix}list-orders*" => Http::response($this->okResponseData),
         ]);
     }
 
@@ -343,6 +344,14 @@ class CheckoutTest extends TestCase
     public function test_order_statuses_can_be_queried()
     {
         $response = Selcom::orderStatus($this->faker->uuid());
+
+        $this->assertEquals($response, $this->okResponseData);
+    }
+
+    /** @test */
+    public function test_orders_can_be_listed()
+    {
+        $response = Selcom::listOrders($this->faker->date(), $this->faker->date());
 
         $this->assertEquals($response, $this->okResponseData);
     }
