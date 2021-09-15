@@ -230,4 +230,12 @@ trait HandlesCheckout
         )
             ->json();
     }
+
+    public function cancelOrder($orderId)
+    {
+        return $this->makeRequest('checkout/cancel-order', 'DELETE', [
+            'order_id' => $orderId,
+        ])
+            ->json();
+    }
 }

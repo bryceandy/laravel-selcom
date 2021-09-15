@@ -311,3 +311,13 @@ $toDate = '2021-12-25';
 
 Selcom::listOrders($fromDate, $toDate);
 ```
+
+### Cancel order
+
+To cancel a Selcom order, simply run:
+
+```php
+use Bryceandy\Selcom\Facades\Selcom;
+
+Selcom::cancelOrder($orderId);
+```

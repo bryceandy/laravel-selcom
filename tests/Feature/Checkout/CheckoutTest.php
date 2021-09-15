@@ -85,6 +85,7 @@ class CheckoutTest extends TestCase
             "${urlPrefix}delete-card" => Http::response($this->okResponseData),
             "${urlPrefix}order-status*" => Http::response($this->okResponseData),
             "${urlPrefix}list-orders*" => Http::response($this->okResponseData),
+            "${urlPrefix}cancel-order" => Http::response($this->okResponseData),
         ]);
     }
 
@@ -352,6 +353,14 @@ class CheckoutTest extends TestCase
     public function test_orders_can_be_listed()
     {
         $response = Selcom::listOrders($this->faker->date(), $this->faker->date());
+
+        $this->assertEquals($response, $this->okResponseData);
+    }
+
+    /** @test */
+    public function test_orders_can_be_cancelled()
+    {
+        $response = Selcom::cancelOrder($this->faker->uuid());
 
         $this->assertEquals($response, $this->okResponseData);
     }
