@@ -295,8 +295,24 @@ To query order statuses to Selcom, simply run:
 
 ```php
 use Bryceandy\Selcom\Facades\Selcom;
+use Illuminate\Support\Facades\DB;
 
-Selcom::orderStatus($orderId);
+$status = Selcom::orderStatus($orderId);
+
+// With this fetched you can update the database record
+DB::table('selcom_payments')->where('order_id', $orderId)
+    ->update(array_merge(
+        'payment_status' => $status['payment_status'],
+        ($status['payment_status'] === 'COMPLETED'
+            ? [
+                'selcom_transaction_id' => $status['transid'],
+                'channel' => $status['channel'],
+                'reference' => $status['reference'],
+                'msisdn' => $status['msisdn'],
+            ]
+            : []
+        )
+    ));
 ```
 
 ### List orders
