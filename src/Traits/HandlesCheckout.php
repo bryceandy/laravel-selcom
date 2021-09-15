@@ -212,4 +212,12 @@ trait HandlesCheckout
                 'updated_at' => now(),
             ]);
     }
+
+    public function orderStatus($orderId)
+    {
+        return $this->makeRequest('checkout/order-status', 'GET', [
+            'order_id' => $orderId,
+        ])
+            ->json();
+    }
 }

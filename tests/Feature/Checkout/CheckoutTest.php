@@ -340,4 +340,16 @@ class CheckoutTest extends TestCase
             fn (CheckoutWebhookReceived $event) => $event->orderId === $orderId
         );
     }
+
+    /** @test */
+    public function test_order_statuses_can_be_queried()
+    {
+        Http::fake([
+            "selcommobile.com/v1/checkout/order-status*" => Http::response($this->okResponseData),
+        ]);
+
+        $response = Selcom::orderStatus($this->faker->uuid());
+
+        $this->assertEquals($response, $this->okResponseData);
+    }
 }
