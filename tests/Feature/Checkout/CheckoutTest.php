@@ -2,20 +2,18 @@
 
 namespace Bryceandy\Selcom\Tests\Feature\Checkout;
 
-use Bryceandy\Selcom\{
+use Bryceandy\Selcom\{Events\CheckoutWebhookReceived,
     Exceptions\InvalidDataException,
     Exceptions\MissingDataException,
     Facades\Selcom,
-    Tests\TestCase,
-};
-use Illuminate\{
-    Foundation\Testing\RefreshDatabase,
+    Tests\TestCase};
+use Illuminate\{Foundation\Testing\RefreshDatabase,
     Foundation\Testing\WithFaker,
     Http\RedirectResponse,
     Support\Arr,
     Support\Facades\DB,
-    Support\Facades\Http,
-};
+    Support\Facades\Event,
+    Support\Facades\Http};
 use Mockery;
 
 class CheckoutTest extends TestCase
@@ -294,5 +292,33 @@ class CheckoutTest extends TestCase
             'order_id' => $orderId,
             'reference' => '289124234',
         ]);
+    }
+
+    /** @test */
+    public function test_webhook_dispatches_an_event()
+    {
+        $data = $this->requiredCheckoutData;
+
+        Selcom::checkout($data);
+
+        $orderId = DB::table('selcom_payments')
+            ->where('transid', $data['transaction_id'])
+            ->value('order_id');
+
+        Event::fake();
+
+        $this->post(route('selcom.checkout-callback'), [
+            'transid' => $data['transaction_id'],
+            'order_id' => $orderId,
+            'reference' => '289124234',
+            'result' => 'SUCCESS',
+            'resultcode' => '000',
+            'payment_status' => 'COMPLETED',
+        ])
+            ->assertOk();
+
+        Event::assertDispatched(
+            fn (CheckoutWebhookReceived $event) => $event->orderId === $orderId
+        );
     }
 }
