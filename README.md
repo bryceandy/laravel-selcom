@@ -148,6 +148,11 @@ If you feel lazy, this package already ships with these pages for you. And if yo
 php artisan vendor:publish --tag=selcom-views
 ```
 
+<p align="center">
+<img src="https://bryceandy-devblog.s3-us-east-2.amazonaws.com/1631711505.png" width="400" style="margin-left:20px;">
+<img src="https://bryceandy-devblog.s3-us-east-2.amazonaws.com/1631711678.png" width="400">
+</p>
+
 - Also, you can assign a prefix for the package. This will be applied to the routes and order IDs
 
 ```dotenv
