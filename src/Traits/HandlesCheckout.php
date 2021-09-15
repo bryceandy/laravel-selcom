@@ -200,4 +200,16 @@ trait HandlesCheckout
         ])
             ->json();
     }
+
+    public function processCheckoutWebhook()
+    {
+        DB::table('selcom_payments')
+            ->where('transid', request('transid'))
+            ->where('order_id', request('order_id'))
+            ->update([
+                'reference' => request('reference'),
+                'payment_status' => request('payment_status'),
+                'updated_at' => now(),
+            ]);
+    }
 }

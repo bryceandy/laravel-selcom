@@ -8,13 +8,12 @@ use Bryceandy\Selcom\{
     Facades\Selcom,
     Tests\TestCase,
 };
-use Illuminate\{
-    Foundation\Testing\RefreshDatabase,
+use Illuminate\{Foundation\Testing\RefreshDatabase,
     Foundation\Testing\WithFaker,
     Http\RedirectResponse,
     Support\Arr,
-    Support\Facades\Http,
-};
+    Support\Facades\DB,
+    Support\Facades\Http};
 use Mockery;
 
 class CheckoutTest extends TestCase
@@ -259,5 +258,37 @@ class CheckoutTest extends TestCase
         $response= Selcom::fetchCards($this->faker->randomNumber(), $this->faker->uuid());
 
         $this->assertEquals($response, $this->storedCardsResponseData);
+    }
+
+    /** @test */
+    public function test_webhook_updates_payment_records()
+    {
+        $data = $this->requiredCheckoutData;
+
+        Selcom::checkout($data);
+
+        $this->assertDatabaseHas('selcom_payments', [
+            'transid' => $data['transaction_id'],
+            'payment_status' => null,
+        ]);
+
+        $orderId = DB::table('selcom_payments')
+            ->where('transid', $data['transaction_id'])
+            ->value('order_id');
+
+        $this->post(route('selcom.checkout-callback'), [
+            'transid' => $data['transaction_id'],
+            'order_id' => $orderId,
+            'reference' => '289124234',
+            'result' => 'SUCCESS',
+            'resultcode' => '000',
+            'payment_status' => 'COMPLETED',
+        ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('selcom_payments', [
+            'transid' => $data['transaction_id'],
+            'payment_status' => 'COMPLETED',
+        ]);
     }
 }

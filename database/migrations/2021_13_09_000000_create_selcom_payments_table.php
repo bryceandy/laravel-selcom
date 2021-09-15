@@ -15,12 +15,12 @@ class CreateSelcomPaymentsTable extends Migration
     {
         Schema::create('selcom_payments', function (Blueprint $table) {
             $table->id();
-            $table->string('order_id');
+            $table->string('order_id')->unique();
+            $table->string('transid')->unique();
+            $table->integer('amount');
             $table->string('user_id')->nullable();
             $table->string('gateway_buyer_uuid')->nullable();
-            $table->string('transid');
             $table->string('payment_status')->nullable();
-            $table->integer('amount');
             $table->string('reference')->nullable();
             $table->string('msisdn')->nullable();
             $table->string('channel')->nullable();
