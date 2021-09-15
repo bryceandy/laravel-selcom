@@ -283,7 +283,7 @@ class ProcessWebhook
             ->value('payment_status');
         
         if ($status === 'PENDING') {
-            Selcom::orderStatus($orderId); //...
+            Selcom::orderStatus($orderId); // Or dispatch a job minutes later to query order status
         }
     }
 }
