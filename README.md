@@ -107,7 +107,7 @@ To use the cards on the payment page, return the following request:
 ```php
 use Bryceandy\Selcom\Facades\Selcom;
 
-Selcom::cardCheckout([
+return Selcom::cardCheckout([
     'name' => "Buyer's full name", 
     'email' => "Buyer's email",
     'phone' => "Buyer's msisdn, for example 255756334000",
