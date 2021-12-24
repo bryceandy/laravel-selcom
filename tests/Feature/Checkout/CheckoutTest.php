@@ -166,6 +166,14 @@ class CheckoutTest extends TestCase
     }
 
     /** @test */
+    public function test_checkout_redirects_to_the_gateway_page()
+    {
+        $response = Selcom::checkout($this->requiredCheckoutData);
+
+        $this->assertTrue($response instanceof RedirectResponse);
+    }
+
+    /** @test */
     public function test_automatic_card_checkout_requires_user_data()
     {
         $this->expectException(InvalidDataException::class);
