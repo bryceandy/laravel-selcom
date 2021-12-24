@@ -114,11 +114,17 @@ trait HandlesCheckout
             (($data['user_id'] ?? false) ? ['user_id' => $data['user_id']] : []),
         ));
 
-        return $data['no_redirection'] ?? false
-            ? $cardPayment
+        if ($data['no_redirection'] ?? false) {
+            return $cardPayment
                 ? $this->makeCardPayment($data, $orderId, $gatewayBuyerUuid)
-                : $this->makeWalletPullPayment($data, $orderId)
-            : redirect(base64_decode($response['data'][0]['payment_gateway_url']));
+                : $this->makeWalletPullPayment($data, $orderId);
+        }
+
+        $url = base64_decode($response['data'][0]['payment_gateway_url']);
+
+        return request()->expectsJson()
+            ? response()->json(['payment_gateway_url' => $url])
+            : redirect($url);
     }
 
     private function makeWalletPullPayment(array $data, string $orderId)
