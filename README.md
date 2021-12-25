@@ -61,7 +61,7 @@ Checkout is the simplest Selcom API we can start processing payments with.
 
 This API automatically pulls your user's USSD payment menu directly after being called.
 
-**Note**: As of now, this is only applicable to AitelMoney and TigoPesa customers.
+**Note**: As of now, this is only applicable to AirtelMoney and TigoPesa customers.
 
 ```php
 use Bryceandy\Selcom\Facades\Selcom;
