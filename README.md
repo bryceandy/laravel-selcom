@@ -171,6 +171,15 @@ SELCOM_LINK_COLOR="#000000"
 SELCOM_BUTTON_COLOR="#E244FF"
 ```
 
+For JSON requests (API applications), this type of checkout to the payments page will return data with
+`payment_gateway_url` instead of redirecting to that page:
+
+```json
+{
+  "payment_gateway_url": "https://example.selcommobile-url.com"
+}
+```
+
 ### Checkout payments with cards (without navigating to the payment page)
 
 To use a card without navigating to the payment page, you need to have already created a card for the paying user by navigating to the payment page.
