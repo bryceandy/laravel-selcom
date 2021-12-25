@@ -1,5 +1,8 @@
 # Change Log
 
+## [v0.0.4](https://github.com/bryceandy/laravel-selcom/compare/v0.0.3...v0.0.4) - December 25, 2021
+* Return the payment gateway URL as data instead of redirecting to the URL for JSON requests
+
 ## [v0.0.3](https://github.com/bryceandy/laravel-selcom/compare/v0.0.2...v0.0.3) - October 28, 2021
  * Add support for PHP 8
 
