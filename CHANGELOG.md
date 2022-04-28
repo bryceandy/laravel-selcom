@@ -1,5 +1,8 @@
 # Change Log
 
+## [v0.0.5](https://github.com/bryceandy/laravel-selcom/compare/v0.0.4...v0.0.5) - April 28, 2022
+* Bump `guzzlehttp/psr7` to fix security issue Improper Input Validation
+
 ## [v0.0.4](https://github.com/bryceandy/laravel-selcom/compare/v0.0.3...v0.0.4) - December 25, 2021
 * Return the payment gateway URL as data instead of redirecting to the URL for JSON requests
 
