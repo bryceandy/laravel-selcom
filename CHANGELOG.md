@@ -1,5 +1,10 @@
 # Change Log
 
+## [v0.0.6](https://github.com/bryceandy/laravel-selcom/compare/v0.0.5...v0.0.6) - June 18, 2022
+* Bump `guzzlehttp/psr7` to fix cross domain cookie leakage
+* Bump `guzzlehttp/psr7` to fix failure to strip authorization header on HTTP downgrade
+* Bump `guzzlehttp/psr7` to fix failure to strip the cookie header on change in host or HTTP downgrade
+
 ## [v0.0.5](https://github.com/bryceandy/laravel-selcom/compare/v0.0.4...v0.0.5) - April 28, 2022
 * Bump `guzzlehttp/psr7` to fix security issue Improper Input Validation
 
