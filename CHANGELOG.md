@@ -1,5 +1,8 @@
 # Change Log
 
+## [v0.0.7](https://github.com/bryceandy/laravel-selcom/compare/v0.0.6...v0.0.7) - June 23, 2022
+* Bump `guzzlehttp/guzzle` to fix change in port should be considered a change in origin
+
 ## [v0.0.6](https://github.com/bryceandy/laravel-selcom/compare/v0.0.5...v0.0.6) - June 18, 2022
 * Bump `guzzlehttp/psr7` to fix cross domain cookie leakage
 * Bump `guzzlehttp/psr7` to fix failure to strip authorization header on HTTP downgrade
